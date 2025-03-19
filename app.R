@@ -8,7 +8,8 @@ ui <- fluidPage(
     mainPanel(
       tableOutput('courseTable')
     )
-  )
+  ),
+  downloadButton("downloadData", "Descargar selección")
 )
 
 server <- function(input, output, session) {
@@ -52,5 +53,15 @@ server <- function(input, output, session) {
   })
   
   output$courseTable <- renderTable({ model.data() })
+  
+  output$downloadData <- downloadHandler(
+    filename = "personal.csv",
+    content = function(file) {
+      # Write the dataset to the `file` that will be downloaded
+      write.csv(model.data(), file)
+    }
+  )
+  
+  
 }
 runApp(shinyApp(ui,server))

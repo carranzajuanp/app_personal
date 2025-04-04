@@ -37,41 +37,20 @@ server <- function(input, output, session) {
   #               "Facultad de Ciencias Sociales",
   #               "Observatorio Astronómico")
   # n = 50
-  # datos = data.frame(Unidad = replicate(n, sample(opciones, 1)),
-  #                               Nombre = replicate(n, paste0(sample(nombres, 1), " ", sample(apellidos, 1))),
-  #                               Cargo = replicate(n, sample(cargo, 1)))
-  library(RPostgreSQL)
-  dsn_database = "<database name>"       # for example  "compose"
-  dsn_hostname = "<your host name>"     # for example  "aws-us-east-1-portal.4.dblayer.com"
-  dsn_port = "<port>"                 # for example  11101 
-  dsn_uid = "<your user id>"        # for example  "admin"
-  dsn_pwd = "<your password>"      # for example  "xxx"
-  
-  tryCatch({
-    drv <- dbDriver("PostgreSQL")
-    print("Connecting to database")
-    conn <- dbConnect(drv, 
-                      dbname = dsn_database,
-                      host = dsn_hostname, 
-                      port = dsn_port,
-                      user = dsn_uid, 
-                      password = dsn_pwd)
-    print("Connected!")
-  },
-  error=function(cond) {
-    print("Unable to connect to database.")
-  })
-  
-  datos <- dbGetQuery(conn, "SELECT datname from pg_database")
+  # datos = data.frame(unidad = replicate(n, sample(opciones, 1)),
+  #                               nombre = replicate(n, paste0(sample(nombres, 1), " ", sample(apellidos, 1))),
+  #                               cargo = replicate(n, sample(cargo, 1)))
+
+  datos = read.csv("http://pentaho-dev-6.psi.unc.edu.ar/shiny_personal.csv", header = TRUE, sep = ",")
   
   output$choose_course <- renderUI({
-    course.names <- as.vector( unique(datos$Unidad) )
+    course.names <- as.vector( unique(datos$unidad) )
     selectInput("facultad", "Seleccionar:", choices=course.names, multiple=TRUE)    
   })
   
   
   model.data <- reactive({
-    subset(datos, Unidad %in% input$facultad)
+    subset(datos, unidad %in% input$facultad)
   })
   
   output$courseTable <- renderTable({ model.data() })

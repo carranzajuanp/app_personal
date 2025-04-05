@@ -37,7 +37,7 @@ server <- function(input, output, session) {
     filename = "personal.csv",
     content = function(file) {
       # Write the dataset to the `file` that will be downloaded
-      write.csv(model.data(), file)
+      write.csv(tabla(), file)
     }
   )
   

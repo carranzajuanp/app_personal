@@ -13,7 +13,7 @@ fluidPage(ui <- fluidPage(
 )) 
 
 server <- function(input, output, session) {
-  datos <- read.csv("~/Descargas/shiny_personal.csv", header = TRUE, sep = ",")
+  datos = read.csv("http://pentaho-dev-6.psi.unc.edu.ar/shiny_personal.csv", header = TRUE, sep = ",")
   names(datos) <- c("Unidad", "Apellido y Nombre", "Tipo de Cargo")
   
   output$elegir_facultad <- renderUI({

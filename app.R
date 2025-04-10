@@ -4,7 +4,7 @@ fluidPage(ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       uiOutput('elegir_facultad'),
-      downloadButton("downloadData", "Descargar selección")
+      downloadButton("downloadData", "Descargar selección"),
     ),
     mainPanel(
       tableOutput('listado')
@@ -13,7 +13,8 @@ fluidPage(ui <- fluidPage(
 )) 
 
 server <- function(input, output, session) {
-  datos = read.csv("http://pentaho-dev-6.psi.unc.edu.ar/shiny_personal.csv", header = TRUE, sep = ",")
+  # datos = read.csv("http://pentaho-dev-6.psi.unc.edu.ar/shiny_personal.csv", header = TRUE, sep = ",")
+  datos = read.csv("~/Descargas/shiny_personal.csv", header = TRUE, sep = ",")
   names(datos) <- c("Unidad", "Apellido y Nombre", "Tipo de Cargo")
   
   output$elegir_facultad <- renderUI({
@@ -26,10 +27,10 @@ server <- function(input, output, session) {
     subset(datos, Unidad %in% input$facultad)
   })
   
-
+  
   output$listado <-  function(){
-    tabla() %>%
-      knitr::kable("html") %>%
+    tabla() |>
+      knitr::kable("html") |>
       kableExtra::kable_styling("striped", full_width = TRUE)
   }
   

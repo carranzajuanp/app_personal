@@ -3,6 +3,7 @@ library(dplyr)
 library(DT)         
 library(ggplot2)    
 library(shinythemes)
+library(lubridate)
 
 ui <- fluidPage(
   theme = shinytheme("flatly"),
@@ -25,6 +26,7 @@ ui <- fluidPage(
         ),
         
         mainPanel(
+          textOutput("update_date_text"),
           h3("Listado de Personal"),
           DT::dataTableOutput('listado')
         )
@@ -61,6 +63,12 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+  
+  output$update_date_text <- renderText({
+    formatted_date <- format(floor_date(Sys.Date(), "week"), "%d/%m/%Y")
+    paste("Información actualizada al:", formatted_date)
+  })
+  
   datos <- read.csv("C:/Users/Usuario/Downloads/shiny_personal_completo.csv", header = TRUE, sep = ",")
   
   names(datos) <- c("Dependencia","Apellido y Nombre", "DNI", "Cargo","Categoria","Dedicacion","Tipo de Cargo")
